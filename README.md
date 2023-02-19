@@ -1,2 +1,2 @@
 # react-manual-nps
-react manual by newpulse
+manual of react for newpulse
