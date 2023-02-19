@@ -233,6 +233,123 @@ export defalut const Page = () = {
 
 
 ### react 进阶
+#### hook
+1. useContext
+```
+可以做到component间不需要props也可以传值,可以做到全局的状态管理
+```
+app.jsx
+```JavaScript
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
+import { createContext, useState } from "react";
+
+export const Context = createContext();
+
+const Provider = ({ children }) => {
+  const [data, setData] = useState('');
+
+  return (
+    <Context.Provider value={{ data, setData }}>
+      {children}
+    </Context.Provider>
+  );
+};
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(
+  <React.StrictMode>
+      <Provider>
+        <App />
+      <Provider>
+  </React.StrictMode>
+);
+```
+page.jsx
+
+```JavaScript
+import { Context } from "App";
+import { useContext } from "react";
+export defalut const Page = () = {
+ //取得定义的context
+ const { data, setData } = useContext(Context);
+ 
+ return (
+  <div>
+   <div className="title">{data}</div>
+   <button onclick={()=>{setData('设定全局共有的data')}}>change title</button>
+  </div>
+ )
+
+}
+```
+3. useReducer
+```
+useState的进阶版,data可以根据action保存,有redux的味道,通常与useContext一起使用.可以用简单的方法完全替代复杂的redux.
+```
+app.jsx
+```JavaScript
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
+import { createContext, useState } from "react";
+
+export const Context = createContext();
+
+const initialState = {
+  data: '初始化',
+};
+
+const Provider = ({ children }) => {
+  const [state, dispatch] = useReducer((state, action) => {
+    switch (action.type) {
+      case 'setData':
+        return {
+          ...state,
+          data: action.data,
+        };
+      default:
+        return state;
+    }
+  }, initialState);
+
+  return (
+    <Context.Provider value={{ state, dispatch }}>
+      {children}
+    </Context.Provider>
+  );
+};
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(
+  <React.StrictMode>
+      <Provider>
+        <App />
+      <Provider>
+  </React.StrictMode>
+);
+```
+page.jsx
+
+```JavaScript
+import { Context } from "App";
+import { useContext } from "react";
+export defalut const Page = () = {
+ //取得定义的context
+ const { state, dispatch } = useContext(Context);
+ 
+ return (
+  <div>
+   <div className="title">{data}</div>
+   <button onclick={()=>{dispatch({type:'setData', data: '设定了全局的data'})}}>change title</button>
+  </div>
+ )
+
+}
+```
+...
+
 ```
 以上看完并尝试后,进入现场的轻微改修的工作足以胜任,接下来我们看看一些开发时常用到的Lib
 ```
@@ -243,4 +360,24 @@ export defalut const Page = () = {
 |styled|css-in-js的库,非必须,但有的项目会用到|
 |react-query|非常出色的异步处理的库,具有缓存机能,提升性能用,常常配合axios让网络请求更丝滑|
 |moment|大家都在用的时间处理工具|
+|redux|状态管理的库,很多框架都在使用,react本身也有相对简单的方法,所以非必须,但面试有时会问到|
 |....|很多很多,不一一赘述|
+
+
+### 实战
+    为了进行下一步实战,以及代码理解,我准备了两个项目
+    
+1.一个简单的朋友圈的网站(fork的别人的作品),比较厉害前后台都有.方便大家理解react以及网站的工作机制
+- 后台部分是node.js的express框架实现
+- db是mysql
+- 网页是react实现
+- get到的点有react-query,值得学习
+- [点我跳转](https://github.com/NZYOS/react-social-v1)
+
+2.我在很久以前为了公司受注开发,做的一个手机app的template,可以看下
+- react native
+- 用了useContext与useReducer替代了redux
+- react navigation 做了页面导航与底部tab
+- [点我跳转](https://github.com/NZYOS/tisSample)
+
+
