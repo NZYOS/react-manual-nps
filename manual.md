@@ -200,12 +200,20 @@ export defalut const Page = () = {
  const [data2,setData2] = useState('')
  
  useEffect(()=>{
- //页面只要被数据刷新就会调用
+ 
  return ()=>{
   //useEffect中的return的函数是component将要销毁时调用的函数(也就是消失的生命周期)
  }
  },[])
+
+//页面只要被数据刷新就会调用
+  useEffect(()=>{
  
+ return ()=>{
+  //useEffect中的return的函数是component将要销毁时调用的函数(也就是消失的生命周期)
+ }
+ })
+
  useEffect(()=>{
  //data发生改变时才会调用
  },[data])
